@@ -5,7 +5,7 @@ class Video < ApplicationRecord
   def available_inventory
     self.inventory - self.rentals.where(returned: false).length
   end
-
+  
   def image_url
     raw_value = read_attribute :image_url
     if !raw_value

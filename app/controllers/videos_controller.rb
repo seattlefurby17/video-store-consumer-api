@@ -22,20 +22,20 @@ class VideosController < ApplicationController
   end
 
   def create
-    video = Video.new(video_params)
-    if video.save
-      render(
-        status: :ok,
-        # json: video.as_json,
-        # only: [:title, :overview, :release_date, :inventory, :image_url]
-      )
-    else
-      render(
-        status: :bad_request,
-        errors: video.errors
-      )
+    unless Video.find_by(external_id: params[:external_id])
+      video = Video.new(video_params)
+      if video.save
+        render(
+          status: :ok,
+          json: video.as_json
+        )
+      else
+        render(
+          status: :bad_request,
+          errors: video.errors
+        )
+      end
     end
-
   end
 
   private
@@ -48,6 +48,6 @@ class VideosController < ApplicationController
   end
 
   def video_params
-    params.permit(:title, :overview, :release_date, :inventory, :image_url, :external_id)
+    params.permit(:title, :overview, :release_date, :inventory, :created_at, :updated_at, :image_url, :external_id)
   end
 end
